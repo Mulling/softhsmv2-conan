@@ -14,17 +14,21 @@ class SoftHSMv2(ConanFile):
 
     releases = "https://github.com/opendnssec/SoftHSMv2/archive/refs/tags/%s.tar.gz"
 
+    source_path = "SoftHSMv2-%s" % version
+
     def source(self):
         file = "%s.tar.gz" % self.version
         source = self.releases % self.version
 
         try:
+            # TODO: Check if we have it already
             tools.download(source , file)
         except:
             # TODO:
             return
         finally:
             tools.untargz(file, ".")
+            os.unlink(file)
 
     def requirements(self):
         self.source()
@@ -34,20 +38,20 @@ class SoftHSMv2(ConanFile):
     def build(self):
         openssl_path = self.deps_cpp_info["openssl"].rootpath
 
-        self.output.info(openssl_path)
-        with tools.chdir("SoftHSMv2-%s" % self.version):
+        with tools.chdir(self.source_path):
             atools = AutoToolsBuildEnvironment(self)
 
-            self.run("./autogen.sh")
+            self.run("./autogen.sh") # TODO: Check if have configure.sh already
 
-            atools.configure(args=["--with-openssl=%s" % openssl_path])
+            atools.configure(args=["--with-openssl=%s" % openssl_path]) # TODO: Check if we have Makefile already
             atools.make()
 
     def package(self):
-        path = "SoftHSMv2-%s" % self.version
-
-        self.copy("libsofthsm2.so", dst="lib", src=path + "/src/lib/.libs/", keep_path=False)
-        self.copy("softhsm2-util", dst="bin", src=path + "/src/bin/util/", keep_path=False)
+        self.copy("libsofthsm2.so", dst="lib", src=self.source_path + "/src/lib/.libs/", keep_path=False)
+        self.copy("softhsm2-util", dst="bin", src=self.source_path + "/src/bin/util/", keep_path=False)
 
     def package_info(self):
+        self.cpp_info.libdirs = ["lib"]
+        self.cpp_info.bindirs = ["bin"]
+
         self.cpp_info.libs = ["softhsmv2"]
