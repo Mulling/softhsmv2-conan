@@ -8,10 +8,11 @@ class SoftHSMv2(ConanFile):
     license = "BSD-2-Clause"
     author = "OpenDNSSEC"
     url = "https://github.com/opendnssec/SoftHSMv2"
-    releases = "https://github.com/opendnssec/SoftHSMv2/archive/refs/tags/%s.tar.gz"
     description = "Conan package for the SoftHSM version 2, part of the OpenDNSSEC project."
     settings = "compiler"
     generators = "make"
+
+    releases = "https://github.com/opendnssec/SoftHSMv2/archive/refs/tags/%s.tar.gz"
 
     def source(self):
         file = "%s.tar.gz" % self.version
