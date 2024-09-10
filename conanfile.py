@@ -16,12 +16,14 @@ class SoftHSMv2(ConanFile):
 
     source_path = "SoftHSMv2-%s" % version
 
+    #TODO: Parametrize OpenSSL version
+
     def source(self):
         file = "%s.tar.gz" % self.version
         source = self.releases % self.version
 
         try:
-            # TODO: Check if we have it already
+            # TODO: Check if we have it already?!
             tools.download(source , file)
         except:
             # TODO:
@@ -31,8 +33,6 @@ class SoftHSMv2(ConanFile):
             os.unlink(file)
 
     def requirements(self):
-        self.source()
-
         self.requires("openssl/1.1.1v")
 
     def build(self):
