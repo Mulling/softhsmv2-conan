@@ -1,6 +1,8 @@
-from conans import ConanFile, AutoToolsBuildEnvironment, tools
 import os
 
+from conans import ConanFile, AutoToolsBuildEnvironment, tools
+
+required_conan_version = ">=1.53.0"
 
 class SoftHSMv2(ConanFile):
     name = "softhsmv2"
@@ -9,9 +11,12 @@ class SoftHSMv2(ConanFile):
     author = "OpenDNSSEC"
     url = "https://github.com/opendnssec/SoftHSMv2"
     homepage = "https://github.com/Mulling/softhsmv2-conan"
+    topics = ("hsm", "softhsm")
     description = "Conan package for the SoftHSM version 2, part of the OpenDNSSEC project."
     settings = {"os", "arch", "compiler", "build_type"}
     generators = "make"
+
+    package_type = "library"
 
     options = {
         "openssl": [None, "ANY"],
@@ -32,8 +37,6 @@ class SoftHSMv2(ConanFile):
         "enable_eddsa": None,
         "disable_visibility": True,
     }
-
-    source_path = f"SoftHSMv2-{version}"
 
 # --with-migrate		Build the migration tool. Used when migrating
 # 			a SoftHSM v1 token database. Requires SQLite3
