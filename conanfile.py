@@ -8,6 +8,7 @@ class SoftHSMv2(ConanFile):
     license = "BSD-2-Clause"
     author = "OpenDNSSEC"
     url = "https://github.com/opendnssec/SoftHSMv2"
+    homepage = "https://github.com/Mulling/softhsmv2-conan"
     description = "Conan package for the SoftHSM version 2, part of the OpenDNSSEC project."
     settings = {"os", "arch", "compiler", "build_type"}
     generators = "make"
@@ -92,7 +93,7 @@ class SoftHSMv2(ConanFile):
             build_args.append(f"--disable-visibility")
 
 
-        with tools.chdir(self.source_path):
+        with tools.chdir(f"SoftHSMv2-{self.version}"):
             atools = AutoToolsBuildEnvironment(self)
 
             self.run("./autogen.sh") # TODO: Check if have configure.sh already
@@ -101,8 +102,8 @@ class SoftHSMv2(ConanFile):
             atools.make()
 
     def package(self):
-        self.copy("libsofthsm2.so", dst="lib", src=self.source_path + "/src/lib/.libs/", keep_path=False)
-        self.copy("softhsm2-util", dst="bin", src=self.source_path + "/src/bin/util/", keep_path=False)
+        self.copy("libsofthsm2.so", dst="lib", src=f"SoftHSMv2-{self.version}/src/lib/.libs/", keep_path=False)
+        self.copy("softhsm2-util", dst="bin", src=f"SoftHSMv2-{self.version}/src/bin/util/", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libdirs = ["lib"]
